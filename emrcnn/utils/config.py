@@ -24,8 +24,8 @@ class Config():
 
     def __init__(self, data_name):
         self.data_name = data_name
-        self.project_dir = '/data/wu1114/Documents/emrcnn_release/' # This needs to be changed to your own
-        
+        self.project_dir = os.environ["PROJECT_DIR"]
+
         # The following are settings for training immu data
         # If you want to train your own data, start a new "if" statement and add these variables
         if data_name == 'immu_ensemble':
