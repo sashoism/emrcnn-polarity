@@ -1,0 +1,6 @@
+__pycache__
+.pyc
+.venv
+/emrcnn_release*
+/cellpol/dataset
+/cellpol/orig*
