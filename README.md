@@ -95,5 +95,9 @@ Mon Apr 1 00:00:00 2024
 True
 ```
 
+## Reproducing the results from the paper
+
+Download and unzip the [archive](http://skynet.ecn.purdue.edu/~micro/emrcnn/emrcnn_release.zip) provided in the paper into `emrcnn_release`.
+
 ## TODO
 🙄
