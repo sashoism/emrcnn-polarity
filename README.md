@@ -1,11 +1,11 @@
 # Reproducing EMR-CNN towards polarity segmentation in yeast cells
 
-## Set up an Ubuntu-based host machine (with an NVIDIA GPU)
+## Set up an Ubuntu-based host machine with an NVIDIA GPU
 
 ### Install (the latest) NVIDIA driver
 ```bash
-sudo apt-get update && apt-get upgrade
-sudo apt-get install nvidia-driver-550-server
+sudo apt-get update && apt-get upgrade -y
+sudo apt-get install -y nvidia-driver-550-server
 ```
 
 ### Install NVIDIA Container Toolkit
@@ -21,7 +21,7 @@ sudo apt-get install -y nvidia-container-toolkit
 ### Install Docker Engine
 ```bash
 sudo apt-get update
-sudo apt-get install ca-certificates curl
+sudo apt-get install -y ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
