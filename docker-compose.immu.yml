@@ -1,0 +1,30 @@
+name: emrcnn-immu
+services:
+  main:
+    image: emrcnn-base
+    build: .
+    environment:
+      - PROJECT_DIR=${PROJECT_DIR}
+    volumes:
+      - type: bind
+        source: emrcnn
+        target: ${PROJECT_DIR}
+      - type: bind
+        source: emrcnn_release/EMR-CNN/dataset/immu
+        target: ${PROJECT_DIR}/dataset/immu
+      - checkpoints:${PROJECT_DIR}/checkpoints
+      - results:${PROJECT_DIR}/results
+    ipc: host
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+volumes:
+  checkpoints:
+  results:
