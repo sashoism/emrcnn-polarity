@@ -15,19 +15,22 @@ import os
 import json
 from tqdm import tqdm
 from imantics import Polygons, Mask
+import sys
+sys.path.append(os.environ["PROJECT_DIR"])
+from utils.config import Config
 
-def encode_images():
+def encode_images(config):
     # encode images as json file for training Detectron2
     # follows the json format of https://github.com/matterport/Mask_RCNN/tree/master/samples/balloon
-    path = 'dataset/immu/train'
-    dest = 'dataset/immu/train/json'
+    path = os.path.dirname(config.train_img_dir)
+    dest = config.train_json_dir
     gt_img_names = os.listdir(os.path.join(path, 'gt'))
     gt_img_names.sort()
     data = {}
     for gt_img_name in tqdm(gt_img_names):
         gt = io.imread(os.path.join(path,'gt', gt_img_name))       
         # encode the image to json file
-        file_size = str(os.path.getsize(os.path.join(path, 'syn')))
+        file_size = str(os.path.getsize(config.train_img_dir)) # huh? this gets the (pointer) size of a directory
         id_ = gt_img_name + file_size
         nuclei_intensity = list(np.unique(gt))
         nuclei_intensity.remove(0)
@@ -54,4 +57,10 @@ def encode_images():
         json.dump(data, outfile)
 
 if __name__ == '__main__':
-    encode_images()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data_name', default="immu_ensemble", type=str, help='name of the dataset')
+    opt = parser.parse_args()
+    data_name = opt.data_name
+    config = Config(data_name)
+    encode_images(config)

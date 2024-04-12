@@ -58,7 +58,11 @@ def slice_merge_without_ensemble_fusion(data_name, method):
 # Merge down the fused results from different ensembles
 # Two options 1. 3d AHC, 2. Layercake
 if __name__ == "__main__":
-    data_name = 'immu_ensemble'
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data_name', default="immu_ensemble", type=str, help='name of the dataset')
+    opt = parser.parse_args()
+    data_name = opt.data_name
     slice_merge_ensembled_model(data_name, 'AHC')  # merge fused results obtained from ensemble fusion using AHC method
     slice_merge_ensembled_model(data_name, 'layercake')  # merge fused results obtained from ensemble fusion using BS method
     slice_merge_without_ensemble_fusion(data_name, 'AHC')  # merge for each detectors using AHC method

@@ -127,7 +127,7 @@ def object_matching(inputs):
     return fused_obj_coords, new_scores, cluster_img
 
 
-if __name__ == '__main__':
-    imgs_list = np.load('/data/wu1114/p219/Documents/Detectron2/backup/imgs_list.npy')
-    scores_list = np.load('/data/wu1114/p219/Documents/Detectron2/backup/scores_list.npy', allow_pickle=True)
-    object_matching([imgs_list[-1], scores_list[-1]])
+# if __name__ == '__main__':
+#     imgs_list = np.load('/data/wu1114/p219/Documents/Detectron2/backup/imgs_list.npy')
+#     scores_list = np.load('/data/wu1114/p219/Documents/Detectron2/backup/scores_list.npy', allow_pickle=True)
+#     object_matching([imgs_list[-1], scores_list[-1]])

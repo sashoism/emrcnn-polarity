@@ -28,9 +28,7 @@ from utils.results_organize import imgs2imgs
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data_name', type=str, help='name of the dataset')
-parser.add_argument('--model_dir', type=str, help='directory of checkpoints')
 parser.add_argument('--ensembleId', type=int, help='id of the ensemble network')
-parser.add_argument('--label_name', type=str, help='label shown on the detection mask')
 parser.add_argument('--save_vis', default=True, type=bool, help='if save the visualization images')
 parser.add_argument('--save_masks', default=True, type=bool, help='if save the instance segmentation masks')
 parser.add_argument('--save_scores', default=True, type=bool, help='if save the confidence scores')
@@ -42,13 +40,13 @@ opt = parser.parse_args()   # get training options
 config = Config(opt.data_name)
 # register dataset
 for d in ["test"]:
-    MetadataCatalog.get(opt.label_name+"_" + d).set(thing_classes=[opt.label_name])
-nuclei_metadata = MetadataCatalog.get(opt.label_name+"_test")
+    MetadataCatalog.get(config.label_name+"_" + d).set(thing_classes=[config.label_name])
+nuclei_metadata = MetadataCatalog.get(config.label_name+"_test")
 
 cfg = get_cfg()
 cfg.merge_from_file(model_zoo.get_config_file(config.backbone_files[opt.ensembleId-1]))
 cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1  # only has one class (ballon)
-cfg.OUTPUT_DIR = os.path.join(os.curdir, 'checkpoints', opt.model_dir, 'ensemble_'+str(opt.ensembleId))
+cfg.OUTPUT_DIR = os.path.join(os.curdir, 'checkpoints', opt.data_name, 'ensemble_'+str(opt.ensembleId))
 
 # test model on valication set
 # cfg.INPUT.MIN_SIZE_TEST = 128
@@ -57,7 +55,7 @@ cfg.OUTPUT_DIR = os.path.join(os.curdir, 'checkpoints', opt.model_dir, 'ensemble
 cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, "model_final.pth")
 cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7   # set a custom testing threshold for this model
 cfg.MODEL.ROI_HEADS.NMS_THRESH_TEST = 0.3
-cfg.DATASETS.TEST = (opt.label_name + "_test", )
+cfg.DATASETS.TEST = (config.label_name + "_test", )
 predictor = DefaultPredictor(cfg)
 
 from detectron2.utils.visualizer import ColorMode

@@ -161,9 +161,9 @@ def condensed_to_square(k, n):
     j = calc_col_idx(k, i, n)
     return i, j
             
-if __name__ == "__main__":
-    data_name = 'sherry_ensemble'
-    opt = Config(data_name)
-    src_dir = os.path.join(opt.wmf_dir, 'masks')
-    dest_dir = os.path.join(opt.wmf_dir, 'layercake')
-    slice_merge_layercake(src_dir, dest_dir, radius=opt.layercake_radius, voxel_thresh=opt.voxel_thresh)
+# if __name__ == "__main__":
+#     data_name = 'sherry_ensemble'
+#     opt = Config(data_name)
+#     src_dir = os.path.join(opt.wmf_dir, 'masks')
+#     dest_dir = os.path.join(opt.wmf_dir, 'layercake')
+#     slice_merge_layercake(src_dir, dest_dir, radius=opt.layercake_radius, voxel_thresh=opt.voxel_thresh)

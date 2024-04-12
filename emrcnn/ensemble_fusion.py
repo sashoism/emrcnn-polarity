@@ -22,8 +22,8 @@ def ensemble_fusion(data_name, root_dir, M):
     M: number of models in an ensemble used
     '''
     dest_dir = os.path.join(root_dir, 'weighted_mask_fusion')
-    opt = Config(data_name)
-    orig_img_names = sorted(os.listdir(opt.test_img_dir))
+    config = Config(data_name)
+    orig_img_names = sorted(os.listdir(config.test_img_dir))
 
     ensembles = sorted([f for f in os.listdir(root_dir) if 'ensemble' in f])
     ensembles = random.sample(ensembles, M)
@@ -32,10 +32,10 @@ def ensemble_fusion(data_name, root_dir, M):
     # for each volume
     for v, vol_name in enumerate(vol_names):
         print('v  num:', v)
-        if isinstance(opt.z, int):
-            z_num = opt.z
-        elif isinstance(opt.z, list):
-            z_num = opt.z[v]
+        if isinstance(config.z, int):
+            z_num = config.z
+        elif isinstance(config.z, list):
+            z_num = config.z[v]
         orig_vol = orig_img_names[:z_num]
         del orig_img_names[:z_num]
         # read all ensemble detections for this volume
@@ -96,7 +96,10 @@ def ensemble_fusion(data_name, root_dir, M):
             # io.imsave(os.path.join(dest_dir, 'visualize', vol_name, img_names[i]), vis_img)
 
 if __name__ == '__main__':
-    data_name = 'immu_ensemble'
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data_name', default="immu_ensemble", type=str, help='name of the dataset')
+    opt = parser.parse_args()
+    data_name = opt.data_name
     config = Config(data_name)
-    config.ensemble = 4
     ensemble_fusion(config.data_name, config.ensemble_dir, config.ensemble)
