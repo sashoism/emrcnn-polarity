@@ -46,7 +46,7 @@ nuclei_metadata = MetadataCatalog.get(config.label_name+"_test")
 cfg = get_cfg()
 cfg.merge_from_file(model_zoo.get_config_file(config.backbone_files[opt.ensembleId-1]))
 cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1  # only has one class (ballon)
-cfg.OUTPUT_DIR = os.path.join(os.curdir, 'checkpoints', opt.data_name, 'ensemble_'+str(opt.ensembleId))
+cfg.OUTPUT_DIR = os.path.join(os.curdir, 'checkpoints', config.data_name, 'ensemble_'+str(opt.ensembleId))
 
 # test model on valication set
 # cfg.INPUT.MIN_SIZE_TEST = 128
@@ -63,17 +63,17 @@ import skimage.io as io
 dataset_dicts = sorted(os.listdir(config.test_img_dir))
 
 if opt.save_masks:
-    if os.path.exists(os.path.join(os.curdir, 'results', opt.data_name, 'ensemble_'+str(opt.ensembleId),'masks')):
-        shutil.rmtree(os.path.join(os.curdir, 'results', opt.data_name, 'ensemble_'+str(opt.ensembleId), 'masks/'))
-    os.makedirs(os.path.join(os.curdir, 'results', opt.data_name, 'ensemble_'+str(opt.ensembleId), 'masks'))
+    if os.path.exists(os.path.join(os.curdir, 'results', config.data_name, 'ensemble_'+str(opt.ensembleId),'masks')):
+        shutil.rmtree(os.path.join(os.curdir, 'results', config.data_name, 'ensemble_'+str(opt.ensembleId), 'masks/'))
+    os.makedirs(os.path.join(os.curdir, 'results', config.data_name, 'ensemble_'+str(opt.ensembleId), 'masks'))
 if opt.save_vis:
-    if os.path.exists(os.path.join(os.curdir, 'results', opt.data_name, 'ensemble_'+str(opt.ensembleId), 'visualize')):
-        shutil.rmtree(os.path.join(os.curdir, 'results', opt.data_name,'ensemble_'+str(opt.ensembleId), 'visualize/'))
-    os.makedirs(os.path.join(os.curdir, 'results', opt.data_name, 'ensemble_'+str(opt.ensembleId), 'visualize'))
+    if os.path.exists(os.path.join(os.curdir, 'results', config.data_name, 'ensemble_'+str(opt.ensembleId), 'visualize')):
+        shutil.rmtree(os.path.join(os.curdir, 'results', config.data_name,'ensemble_'+str(opt.ensembleId), 'visualize/'))
+    os.makedirs(os.path.join(os.curdir, 'results', config.data_name, 'ensemble_'+str(opt.ensembleId), 'visualize'))
 if opt.save_scores:
-    if os.path.exists(os.path.join(os.curdir, 'results', opt.data_name, 'ensemble_'+str(opt.ensembleId), 'scores')):
-        shutil.rmtree(os.path.join(os.curdir, 'results', opt.data_name, 'ensemble_'+str(opt.ensembleId), 'scores/'))
-    os.makedirs(os.path.join(os.curdir, 'results', opt.data_name,'ensemble_'+str(opt.ensembleId), 'scores'))
+    if os.path.exists(os.path.join(os.curdir, 'results', config.data_name, 'ensemble_'+str(opt.ensembleId), 'scores')):
+        shutil.rmtree(os.path.join(os.curdir, 'results', config.data_name, 'ensemble_'+str(opt.ensembleId), 'scores/'))
+    os.makedirs(os.path.join(os.curdir, 'results', config.data_name,'ensemble_'+str(opt.ensembleId), 'scores'))
 start = time.time()
 for i, d in enumerate(dataset_dicts):
     # if i == 54:
@@ -94,7 +94,7 @@ for i, d in enumerate(dataset_dicts):
         if not opt.vis_bbox:
             outputs_tmp.remove("pred_boxes")
         out = v.draw_instance_predictions(outputs_tmp)
-        io.imsave(os.path.join(os.curdir, 'results', opt.data_name, 'ensemble_'+str(opt.ensembleId),
+        io.imsave(os.path.join(os.curdir, 'results', config.data_name, 'ensemble_'+str(opt.ensembleId),
                             'visualize', d.split('/')[-1]), out.get_image()[:, :, ::-1])
 
     # Save instance masks
@@ -116,20 +116,20 @@ for i, d in enumerate(dataset_dicts):
             mask_combined[np.logical_and(mask>0.5, mask_combined==0)] = ii+1
         if len(removed_obj_idx)!=0:
             mask_combined = relabel_sequentially(mask_combined)
-        io.imsave(os.path.join(os.curdir, 'results', opt.data_name, 'ensemble_' +
+        io.imsave(os.path.join(os.curdir, 'results', config.data_name, 'ensemble_' +
                             str(opt.ensembleId), 'masks', d.split('/')[-1]), mask_combined)
     
     # also need to save probability scores used for weighted pixel fusion
     if opt.save_scores:
         scores = np.delete(outputs["instances"].to("cpu").scores, removed_obj_idx)
-        np.save(os.path.join(os.curdir, 'results', opt.data_name, 'ensemble_' + str(opt.ensembleId), 'scores', d.split('.')[0]+'.npy'), scores)
+        np.save(os.path.join(os.curdir, 'results', config.data_name, 'ensemble_' + str(opt.ensembleId), 'scores', d.split('.')[0]+'.npy'), scores)
 
 if opt.save_masks:
-    imgs2imgs(src=os.path.join('results', opt.data_name, 'ensemble_' + str(opt.ensembleId), 'masks'), v=config.v, z=config.z)
+    imgs2imgs(src=os.path.join('results', config.data_name, 'ensemble_' + str(opt.ensembleId), 'masks'), v=config.v, z=config.z)
 if opt.save_scores:
-    imgs2imgs(src=os.path.join('results', opt.data_name, 'ensemble_' + str(opt.ensembleId), 'scores'), v=config.v, z=config.z)
+    imgs2imgs(src=os.path.join('results', config.data_name, 'ensemble_' + str(opt.ensembleId), 'scores'), v=config.v, z=config.z)
 if opt.save_vis:
-    imgs2imgs(src=os.path.join('results', opt.data_name, 'ensemble_' + str(opt.ensembleId), 'visualize'), v=config.v, z=config.z)
+    imgs2imgs(src=os.path.join('results', config.data_name, 'ensemble_' + str(opt.ensembleId), 'visualize'), v=config.v, z=config.z)
 
 # Save segmentation masks for layercake, save centroid information
 print('total testing time for ensemble_'+str(opt.ensembleId) + ' is:', (time.time() - start))

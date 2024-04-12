@@ -30,8 +30,6 @@ warnings.filterwarnings("ignore")
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data_name', type=str, help='name of the dataset')
-parser.add_argument('--model_dir', type=str, help='directory of checkpoints')
-parser.add_argument('--label_name', type=str, help='label shown on the detection mask')
 parser.add_argument('--save_vis', default=True, type=bool, help='if save the visualization images')
 parser.add_argument('--save_masks', default=True, type=bool, help='if save the instance segmentation masks')
 parser.add_argument('--save_scores', default=True, type=bool, help='if save the confidence scores')
@@ -39,14 +37,6 @@ parser.add_argument('--vis_bbox', default=False, type=bool, help='if draw the bo
 parser.add_argument('--vis_label', default=False, type=bool, help='if draw the label on the visualization image')
 
 opt = parser.parse_args()   # get training options
-opt.data_name = "immu_large_ensemble"
-opt.ensembleId=4
-opt.label_name="immu"
-opt.save_vis = True
-opt.save_masks = True
-opt.save_scores = True
-opt.vis_bbox = False
-opt.vis_label = False
 
 config = Config(opt.data_name)
 # read the entire volume
@@ -59,15 +49,15 @@ for i, d in enumerate(dataset_dicts):
 # volume = np.pad(volume, ((32,32), (32,32), (32,32), (0,0)), mode='constant')
 # load all models
 predictors = []
-for ensembleId in range(1, int(opt.ensembleId)+1):
+for ensembleId in range(1, int(config.ensemble)+1):
     cfg = get_cfg()
     cfg.merge_from_file(model_zoo.get_config_file(config.backbone_files[ensembleId-1]))
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1  # only has one class (ballon)
-    cfg.OUTPUT_DIR = os.path.join(os.curdir, 'checkpoints', opt.model_dir, 'ensemble_'+str(ensembleId))
+    cfg.OUTPUT_DIR = os.path.join(os.curdir, 'checkpoints', config.data_name, 'ensemble_'+str(ensembleId))
     cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, "model_final.pth")
     cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7   # set a custom testing threshold for this model
     cfg.MODEL.ROI_HEADS.NMS_THRESH_TEST = 0.3
-    cfg.DATASETS.TEST = (opt.label_name + "_test", )
+    cfg.DATASETS.TEST = (config.label_name + "_test", )
     predictors.append(DefaultPredictor(cfg))
 
 
@@ -95,9 +85,9 @@ fixed_cc = CC2(fixed_gray, 0, 0)
 overlay = apply_mask(volume[:,:,:,0], fixed_cc, 0.7)
 
 if opt.save_masks:
-    if os.path.exists(os.path.join(os.curdir, 'results', opt.data_name, 'masks')):
-        shutil.rmtree(os.path.join(os.curdir, 'results', opt.data_name, 'masks/'))
-    os.makedirs(os.path.join(os.curdir, 'results', opt.data_name, 'masks'))
-    io.imsave(os.path.join(os.curdir, 'results', opt.data_name, 'masks', 'seg_vol.tif'), fixed_gray.astype(np.uint16))
-    io.imsave(os.path.join(os.curdir, 'results', opt.data_name, 'masks', 'seg_cc.tif'), fixed_cc)
-    io.imsave(os.path.join(os.curdir, 'results', opt.data_name, 'masks', 'overlay.tif'), overlay)
+    if os.path.exists(os.path.join(os.curdir, 'results', config.data_name, 'masks')):
+        shutil.rmtree(os.path.join(os.curdir, 'results', config.data_name, 'masks/'))
+    os.makedirs(os.path.join(os.curdir, 'results', config.data_name, 'masks'))
+    io.imsave(os.path.join(os.curdir, 'results', config.data_name, 'masks', 'seg_vol.tif'), fixed_gray.astype(np.uint16))
+    io.imsave(os.path.join(os.curdir, 'results', config.data_name, 'masks', 'seg_cc.tif'), fixed_cc)
+    io.imsave(os.path.join(os.curdir, 'results', config.data_name, 'masks', 'overlay.tif'), overlay)

@@ -35,18 +35,18 @@ print("Initializaing Ensemble Network #" + str(opt.ensembleId))
 # register dataset
 for d in ["train"]:
     DatasetCatalog.register(
-        opt.data_name+"_" + d, lambda d=d: get_nuclei_dicts(config.train_img_dir, config.train_json_dir))
+        config.data_name+"_" + d, lambda d=d: get_nuclei_dicts(config.train_img_dir, config.train_json_dir))
 
-    MetadataCatalog.get(opt.data_name+"_" + d).set(thing_classes=[opt.data_name])
+    MetadataCatalog.get(config.data_name+"_" + d).set(thing_classes=[config.data_name])
 
-nuclei_metadata = MetadataCatalog.get(opt.data_name+"_train")
+nuclei_metadata = MetadataCatalog.get(config.data_name+"_train")
 
 start = time.time()
 # Train dataset
 cfg = get_cfg()
 cfg.merge_from_file(model_zoo.get_config_file(config.backbone_files[opt.ensembleId-1]))
 print('loading backbbone ' + config.backbone_files[opt.ensembleId-1])
-cfg.DATASETS.TRAIN = (opt.data_name+"_train",)
+cfg.DATASETS.TRAIN = (config.data_name+"_train",)
 cfg.DATASETS.TEST = ()
 cfg.DATALOADER.NUM_WORKERS = 2
 cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(config.backbone_files[opt.ensembleId-1])  # Let training initialize from model zoo
@@ -60,7 +60,7 @@ cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 512
 # cfg.INPUT.MAX_SIZE_TRAIN = 128
 cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1  # only has one class (ballon)
 cfg.OUTPUT_DIR = os.path.join(
-    os.curdir, 'checkpoints', opt.data_name, 'ensemble_'+str(opt.ensembleId))
+    os.curdir, 'checkpoints', config.data_name, 'ensemble_'+str(opt.ensembleId))
 os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
 trainer = DefaultTrainer(cfg)
 trainer.resume_or_load(resume=False)
