@@ -383,16 +383,3 @@ def get_consecutives(nums):
     gaps = [[s, e] for s, e in zip(nums, nums[1:]) if s+1 < e]
     edges = iter(nums[:1] + sum(gaps, []) + nums[-1:])
     return list(zip(edges, edges))
-
-
-# if __name__ == "__main__":
-#     data_name = 'sherry_ensemble'
-#     opt = Config(data_name)
-#     src_dir = os.path.join(opt.wmf_dir)
-#     dest_dir = os.path.join(opt.wmf_dir, 'AHC')
-#     slice_merge_AHC(data_name, src_dir, dest_dir, opt.k_list, opt.voxel_thresh, opt.outlier_thresh)
-
-    # test small_obj_connection
-    # vol = io.imread('/data/wu1114/p219/Documents/Detectron2/results/f44_ensemble/weighted_mask_fusion/AHC/seg_results_3d/vol_01.tif')
-    # vol = same_obj_connection(vol)
-    # io.imsave('tmp.tif', vol)

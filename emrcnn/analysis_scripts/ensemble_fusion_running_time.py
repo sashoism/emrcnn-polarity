@@ -18,31 +18,30 @@ import time
 
 # similar to "ensemble_fusion.py", just use for checking running time
 
-def ensemble_fusion(data_name, root_dir):
-    '''
-    data_name: name of the dataset that defined in utils.config, used to retrieve original images and draw masks in `visualize` folder
-    root_dir: detection results from each model is under this dir
-    '''
-    dest_dir = os.path.join(root_dir, 'weighted_mask_fusion')
-    opt = Config(data_name)
-    orig_img_names = sorted(os.listdir(opt.test_img_dir))
+def ensemble_fusion(config):
+    # '''
+    # data_name: name of the dataset that defined in utils.config, used to retrieve original images and draw masks in `visualize` folder
+    # root_dir: detection results from each model is under this dir
+    # '''
+    # dest_dir = config.wmf_dir
+    orig_img_names = sorted(os.listdir(config.test_img_dir))
 
-    ensembles = sorted([f for f in os.listdir(root_dir) if 'ensemble' in f])
+    ensembles = sorted([f for f in os.listdir(config.ensemble_dir) if 'ensemble' in f])
     # deterine how many volumes needs to be processed
-    vol_names = sorted(os.listdir(os.path.join(root_dir, ensembles[0], 'masks')))
+    vol_names = sorted(os.listdir(os.path.join(config.ensemble_dir, ensembles[0], 'masks')))
     # for each volume
     for v, vol_name in enumerate(vol_names):
-        if isinstance(opt.z, int):
-            z_num = opt.z
-        elif isinstance(opt.z, list):
-            z_num = opt.z[v]
+        if isinstance(config.z, int):
+            z_num = config.z
+        elif isinstance(config.z, list):
+            z_num = config.z[v]
         orig_vol = orig_img_names[:z_num]
         del orig_img_names[:z_num]
         # read all ensemble detections for this volume
         img_names = sorted(os.listdir(os.path.join(
-            root_dir, ensembles[0], 'masks', vol_name)))
+            config.ensemble_dir, ensembles[0], 'masks', vol_name)))
         score_names = sorted(os.listdir(os.path.join(
-            root_dir, ensembles[0], 'scores', vol_name)))
+            config.ensemble_dir, ensembles[0], 'scores', vol_name)))
         imgs_list = []
         scores_list = []
         for img_name, score_name in zip(img_names, score_names):
@@ -50,9 +49,9 @@ def ensemble_fusion(data_name, root_dir):
             scores = []  # scores needs to be fused
             for ensemble in ensembles:
                 imgs.append(io.imread(os.path.join(
-                    root_dir, ensemble, 'masks', vol_name, img_name)))
+                    config.ensemble_dir, ensemble, 'masks', vol_name, img_name)))
                 scores.append(np.load(os.path.join(
-                    root_dir, ensemble, 'scores', vol_name, score_name)))
+                    config.ensemble_dir, ensemble, 'scores', vol_name, score_name)))
 
             imgs_list.append(imgs)
             scores_list.append(scores)
@@ -72,5 +71,5 @@ if __name__ == '__main__':
     data_name = opt.data_name
     config = Config(data_name)
     start = time.time()
-    ensemble_fusion(data_name, config.ensemble_dir)
+    ensemble_fusion(config)
     print('weighted mask fusion time is:', (time.time() - start)/16)

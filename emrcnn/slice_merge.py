@@ -19,17 +19,17 @@ def slice_merge_ensembled_model(data_name, method):
         data_name (str): load settings from config base on data_name
         method (str): choose which method to use for slice merging
     """
-    opt = Config(data_name)
+    config = Config(data_name)
     if method == "AHC":
         # src_dir = os.path.join(opt.wmf_dir, 'masks')
-        dest_dir = os.path.join(opt.wmf_dir, 'AHC')
-        slice_merge_AHC(data_name, opt.wmf_dir, opt.k_list, opt.voxel_thresh, opt.outlier_thresh)
-        mask_overlay(opt.test_img_orig_dir, dest_dir, opt.orig_img_size,alpha=0.9)
+        dest_dir = os.path.join(config.wmf_dir, 'AHC')
+        slice_merge_AHC(data_name, config.wmf_dir, config.k_list, config.voxel_thresh, config.outlier_thresh)
+        mask_overlay(config.test_img_orig_dir, dest_dir, config.orig_img_size,alpha=0.9)
     elif method == 'layercake':
-        src_dir = os.path.join(opt.wmf_dir, 'masks')
-        dest_dir = os.path.join(opt.wmf_dir, 'layercake')
-        slice_merge_layercake(src_dir, dest_dir, radius=opt.layercake_radius, voxel_thresh=opt.voxel_thresh)
-        mask_overlay(opt.test_img_orig_dir, dest_dir, opt.orig_img_size,alpha=0.9)
+        src_dir = os.path.join(config.wmf_dir, 'masks')
+        dest_dir = os.path.join(config.wmf_dir, 'layercake')
+        slice_merge_layercake(src_dir, dest_dir, radius=config.layercake_radius, voxel_thresh=config.voxel_thresh)
+        mask_overlay(config.test_img_orig_dir, dest_dir, config.orig_img_size,alpha=0.9)
 
 def slice_merge_without_ensemble_fusion(data_name, method):
     """Chose a data and a method to merge slices
@@ -39,21 +39,21 @@ def slice_merge_without_ensemble_fusion(data_name, method):
         data_name (str): load settings from config base on data_name
         method (str): choose which method to use for slice merging
     """
-    opt = Config(data_name)
+    config = Config(data_name)
     if method == "AHC":
-        ensemble_names = sorted([name for name in os.listdir(opt.ensemble_dir) if 'ensemble' in name])
+        ensemble_names = sorted([name for name in os.listdir(config.ensemble_dir) if 'ensemble' in name])
         for i, ensemble_name in enumerate(ensemble_names):
-            src_dir = os.path.join(opt.ensemble_dir, ensemble_name)
-            dest_dir = os.path.join(opt.ensemble_dir, ensemble_name, 'AHC')
-            slice_merge_AHC(data_name, src_dir, opt.k_list, opt.voxel_thresh, opt.outlier_thresh)
-            mask_overlay(opt.test_img_orig_dir, dest_dir, opt.orig_img_size, alpha=0.9)
+            src_dir = os.path.join(config.ensemble_dir, ensemble_name)
+            dest_dir = os.path.join(config.ensemble_dir, ensemble_name, 'AHC')
+            slice_merge_AHC(data_name, src_dir, config.k_list, config.voxel_thresh, config.outlier_thresh)
+            mask_overlay(config.test_img_orig_dir, dest_dir, config.orig_img_size, alpha=0.9)
     elif method == 'layercake':
-        ensemble_names = sorted([name for name in os.listdir(opt.ensemble_dir) if 'ensemble' in name])
+        ensemble_names = sorted([name for name in os.listdir(config.ensemble_dir) if 'ensemble' in name])
         for i, ensemble_name in enumerate(ensemble_names):
-            src_dir = os.path.join(opt.ensemble_dir, ensemble_name, 'masks')
-            dest_dir = os.path.join(opt.ensemble_dir, ensemble_name, 'layercake')
-            slice_merge_layercake(src_dir, dest_dir, radius=opt.layercake_radius, voxel_thresh=opt.voxel_thresh)
-            mask_overlay(opt.test_img_orig_dir, dest_dir, opt.orig_img_size, alpha=0.9)
+            src_dir = os.path.join(config.ensemble_dir, ensemble_name, 'masks')
+            dest_dir = os.path.join(config.ensemble_dir, ensemble_name, 'layercake')
+            slice_merge_layercake(src_dir, dest_dir, radius=config.layercake_radius, voxel_thresh=config.voxel_thresh)
+            mask_overlay(config.test_img_orig_dir, dest_dir, config.orig_img_size, alpha=0.9)
 
 # Merge down the fused results from different ensembles
 # Two options 1. 3d AHC, 2. Layercake

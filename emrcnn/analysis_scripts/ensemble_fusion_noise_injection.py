@@ -60,8 +60,8 @@ def ensemble_fusion_with_noise_injection(data_name, root_dir):
     root_dir: detection results from each model is under this dir
     '''
     dest_dir = os.path.join(root_dir, 'weighted_mask_fusion')
-    opt = Config(data_name)
-    orig_img_names = sorted(os.listdir(opt.test_img_dir))
+    config = Config(data_name)
+    orig_img_names = sorted(os.listdir(config.test_img_dir))
 
     ensembles = sorted([f for f in os.listdir(root_dir) if 'ensemble' in f])
     # ensembles = ensembles[:4]
@@ -69,10 +69,10 @@ def ensemble_fusion_with_noise_injection(data_name, root_dir):
     vol_names = sorted(os.listdir(os.path.join(root_dir, ensembles[0], 'masks')))
     # for each volume
     for v, vol_name in enumerate(vol_names):
-        if isinstance(opt.z, int):
-            z_num = opt.z
-        elif isinstance(opt.z, list):
-            z_num = opt.z[v]
+        if isinstance(config.z, int):
+            z_num = config.z
+        elif isinstance(config.z, list):
+            z_num = config.z[v]
         orig_vol = orig_img_names[:z_num]
         del orig_img_names[:z_num]
         # read all ensemble detections for this volume
