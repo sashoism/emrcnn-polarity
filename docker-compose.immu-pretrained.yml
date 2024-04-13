@@ -3,8 +3,13 @@ services:
   main:
     image: emrcnn-base
     build: .
+    working_dir: ${PROJECT_DIR}
+    command: bash run.sh
     environment:
       - PROJECT_DIR=${PROJECT_DIR}
+      - DATA_NAME=immu_ensemble
+      - ENSEMBLES=4
+      - PRETRAINED=YES
     volumes:
       - type: bind
         source: emrcnn
@@ -15,7 +20,9 @@ services:
       - type: bind
         source: emrcnn_release/EMR-CNN/checkpoints
         target: ${PROJECT_DIR}/checkpoints
-      - results:${PROJECT_DIR}/results
+      - type: bind
+        source: .torch
+        target: /root/.torch
     ipc: host
     ulimits:
       memlock: -1
@@ -27,5 +34,3 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [ gpu ]
-volumes:
-  results:

@@ -102,7 +102,7 @@ def slice_merge_layercake(src_dir,dest_dir,radius=2, voxel_thresh=0):
         savepath_3d = os.path.join(dest_dir,'seg_results_3d')
         if not os.path.exists(savepath_3d):
             os.makedirs(savepath_3d)
-        io.imsave(os.path.join(savepath_3d,'vol_'+str(vv+1).zfill(2)+'.tif'),vol)
+        io.imsave(os.path.join(savepath_3d,'vol_'+str(vv+1).zfill(2)+'.tif'),vol, check_contrast=False)
         
         #Color Coding
         ## Colormap - Read text files saved from MATLAB

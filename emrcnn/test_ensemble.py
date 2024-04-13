@@ -117,7 +117,7 @@ for i, d in enumerate(dataset_dicts):
         if len(removed_obj_idx)!=0:
             mask_combined = relabel_sequentially(mask_combined)
         io.imsave(os.path.join(os.curdir, 'results', config.data_name, 'ensemble_' +
-                            str(opt.ensembleId), 'masks', d.split('/')[-1]), mask_combined)
+                            str(opt.ensembleId), 'masks', d.split('/')[-1]), mask_combined, check_contrast=False)
     
     # also need to save probability scores used for weighted pixel fusion
     if opt.save_scores:

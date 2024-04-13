@@ -137,7 +137,7 @@ def ensemble_fusion_with_noise_injection(data_name, root_dir):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_name', default="immu_ensemble", type=str, help='name of the dataset')
+    parser.add_argument('--data_name', required=True, type=str, help='name of the dataset')
     opt = parser.parse_args()
     data_name = opt.data_name
     config = Config(data_name)

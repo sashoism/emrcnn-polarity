@@ -95,9 +95,19 @@ Mon Apr 1 00:00:00 2024
 True
 ```
 
-## Reproducing the results from the paper
+## Run on the synthetic nuclei data (`immu_ensemble`)
 
 Download and unzip the [archive](http://skynet.ecn.purdue.edu/~micro/emrcnn/emrcnn_release.zip) provided in the paper into `emrcnn_release`.
+
+### Using the provided checkpoints (skip training)
+```bash
+sudo docker compose -f docker-compose.immu-pretrained.yml up -d
+```
+
+### Train yourself
+```bash
+sudo docker compose -f docker-compose.immu.yml up -d
+```
 
 ## TODO
 🙄

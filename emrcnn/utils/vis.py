@@ -28,7 +28,7 @@ def plot_sample(img_dir, json_dir):
     dataset_dicts = get_nuclei_dicts(img_dir, json_dir)
     for d in random.sample(dataset_dicts, 3):
         img = cv2.imread(d["file_name"])
-        visualizer = Visualizer(img[:, :, ::-1], metadata=nuclei_metadata, scale=2)
+        visualizer = Visualizer(img[:, :, ::-1], metadata=nuclei_metadata, scale=2) # nuclei_metadata undefined, copypasta?
         out = visualizer.draw_dataset_dict(d)
         plt.imshow(out.get_image()[:, :, ::-1])
         io.imsave('demo.png', out.get_image()[:, :, ::-1])
@@ -64,7 +64,7 @@ def draw_on_img(orig_img, masks, scores, opt):
     masks_split = split_intensities(masks)
     # create Instance
     ins = Instances(orig_img.shape, scores=torch.tensor(scores), pred_masks=torch.tensor(masks_split))
-    if scores != None:
+    if scores is not None:
         out=v.draw_instance_predictions(ins)
     else:
         # Do not draw labels

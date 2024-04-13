@@ -60,7 +60,7 @@ def slice_merge_without_ensemble_fusion(data_name, method):
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_name', default="immu_ensemble", type=str, help='name of the dataset')
+    parser.add_argument('--data_name', required=True, type=str, help='name of the dataset')
     opt = parser.parse_args()
     data_name = opt.data_name
     slice_merge_ensembled_model(data_name, 'AHC')  # merge fused results obtained from ensemble fusion using AHC method

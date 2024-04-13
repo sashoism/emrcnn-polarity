@@ -63,7 +63,7 @@ if __name__ == "__main__":
     # make sure to comment all image saving code to reduce the running time.
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_name', default="immu_ensemble", type=str, help='name of the dataset')
+    parser.add_argument('--data_name', required=True, type=str, help='name of the dataset')
     opt = parser.parse_args()
     data_name = opt.data_name
     start = time.time()

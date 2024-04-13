@@ -127,7 +127,7 @@ def slice_merge_AHC(data_name, root_dir, k_list, vox_thresh=0, outlier_thresh=0)
         if not os.path.exists(savepath_3d):
             os.makedirs(savepath_3d)
         io.imsave(os.path.join(savepath_3d, 'vol_' +
-                                 str(vv+1).zfill(2)+'.tif'), vol)
+                                 str(vv+1).zfill(2)+'.tif'), vol, check_contrast=False)
 
         # Color Coding
         # Colormap - Read text files saved from MATLAB

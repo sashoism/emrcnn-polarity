@@ -24,8 +24,6 @@ parser.add_argument('--data_name', type=str, required=True,
                     help='name of the dataset')
 parser.add_argument('--ensembleId', type=int, required=True,
                     help='id of the ensemble network')
-parser.add_argument('--shuffle_models', type=bool, default=False,
-                    help='if shuffle the backbone models')
 parser.add_argument('--iters', type=int, default=1000,
                     help='number of iterations')
 opt = parser.parse_args()   # get training options

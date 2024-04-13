@@ -40,7 +40,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--data_name', type=str, required=True, help='name of the dataset')
+parser.add_argument('--data_name', required=True, type=str, help='name of the dataset')
 parser.add_argument('--save_vis', default=True, type=bool, help='if save the visualization images')
 parser.add_argument('--save_masks', default=True, type=bool, help='if save the instance segmentation masks')
 parser.add_argument('--save_scores', default=True, type=bool, help='if save the confidence scores')

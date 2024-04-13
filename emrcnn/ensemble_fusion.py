@@ -85,11 +85,11 @@ def ensemble_fusion(data_name, root_dir, M):
                 new_mask = relabel_sequentially(new_mask)
                 new_scores = np.delete(new_scores, removed_obj_idx)
             # save mask
-            io.imsave(os.path.join(dest_dir, 'masks', vol_name, img_names[i]), new_mask)
+            io.imsave(os.path.join(dest_dir, 'masks', vol_name, img_names[i]), new_mask, check_contrast=False)
             # save score
             np.save(os.path.join(dest_dir, 'scores', vol_name, score_names[i]), new_scores) # bug fix: new_socre -> new_scores
             # save cluster
-            io.imsave(os.path.join(dest_dir, 'cluster',vol_name, img_names[i]), cluster_img)
+            io.imsave(os.path.join(dest_dir, 'cluster',vol_name, img_names[i]), cluster_img, check_contrast=False)
             # save visualize
             # orig_img = cv2.imread(os.path.join(opt.test_img_dir, orig_vol[i]))
             # vis_img = draw_on_img(orig_img, new_mask, new_scores, opt)
@@ -98,7 +98,7 @@ def ensemble_fusion(data_name, root_dir, M):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_name', default="immu_ensemble", type=str, help='name of the dataset')
+    parser.add_argument('--data_name', required=True, type=str, help='name of the dataset')
     opt = parser.parse_args()
     data_name = opt.data_name
     config = Config(data_name)
